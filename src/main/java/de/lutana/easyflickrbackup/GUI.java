@@ -31,6 +31,7 @@ import com.flickr4java.flickr.auth.Auth;
 import com.flickr4java.flickr.auth.AuthInterface;
 import com.flickr4java.flickr.auth.Permission;
 import com.flickr4java.flickr.people.PeopleInterface;
+import com.flickr4java.flickr.people.User;
 import com.flickr4java.flickr.photos.Photo;
 import com.flickr4java.flickr.photos.PhotoList;
 import com.flickr4java.flickr.photos.PhotosInterface;
@@ -178,7 +179,7 @@ public class GUI extends javax.swing.JFrame implements Runnable {
 
         statusLabel.setText("Backup hasn't started yet!");
 
-        cancelBtn.setText("Cancel");
+        cancelBtn.setText("Stop");
         cancelBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelBtnActionPerformed(evt);
@@ -195,7 +196,7 @@ public class GUI extends javax.swing.JFrame implements Runnable {
                     .addComponent(startBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(backupSep)
                     .addGroup(backupPanelLayout.createSequentialGroup()
-                        .addComponent(statusLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 491, Short.MAX_VALUE)
+                        .addComponent(statusLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 501, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cancelBtn))
                     .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -298,7 +299,7 @@ public class GUI extends javax.swing.JFrame implements Runnable {
 		File dir = Settings.getBackupDirectory();
 		dirField.setText(dir.getAbsolutePath());
 		startBtn.setEnabled(dir.exists() && this.isAuthenticated() && !this.isRunning());
-		openFolderBtn.setEnabled(dir.exists());
+		openFolderBtn.setEnabled(dir.exists() && this.isAuthenticated());
 		cancelBtn.setEnabled(this.isRunning());
 		progressBar.setEnabled(this.isRunning());
 	}
@@ -361,7 +362,7 @@ public class GUI extends javax.swing.JFrame implements Runnable {
 
     private void openFolderBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openFolderBtnActionPerformed
 		try {
-			Desktop.getDesktop().open(Settings.getBackupDirectory());
+			Desktop.getDesktop().open(this.getBackupDirectory());
 		} catch (IOException ex) {
 			JOptionPane.showMessageDialog(this, "Can't open the backup folder.");
 		}
@@ -401,9 +402,29 @@ public class GUI extends javax.swing.JFrame implements Runnable {
 		dlg.setVisible(true);
     }//GEN-LAST:event_aboutBtnActionPerformed
 
+	public File getBackupDirectory() {
+		User user = this.getAuth().getUser();
+		File basedir = Settings.getBackupDirectory();
+		String dir = basedir.getAbsolutePath();
+		dir += File.separator;
+		dir += user.getId();
+		File file = new File(dir);
+		if (!file.exists()) {
+			file.mkdirs();
+		}
+		if (!file.exists()) {
+			file = basedir;
+		}
+		return file;
+	}
+	
 	@Override
 	public void run() {
-		File directory = Settings.getBackupDirectory();
+		this.statusLabel.setText("Initializing download process...");
+		File directory = this.getBackupDirectory();
+		if (!directory.mkdirs()) {
+			
+		}
 		PeopleInterface peopleInt = flickr.getPeopleInterface();
 		PhotosInterface photoInt = flickr.getPhotosInterface();
 		int pages = 1;
@@ -431,15 +452,18 @@ public class GUI extends javax.swing.JFrame implements Runnable {
 					this.statusLabel.setText("Downloading image " + current + " of " + total + ".");
 					try {
 						File newFile = new File(directory, p.getId() + "." + p.getOriginalFormat());
-						BufferedInputStream inStream = new BufferedInputStream(photoInt.getImageAsStream(p, Size.ORIGINAL));
-						FileOutputStream fos = new FileOutputStream(newFile);
-						int read;
-						while ((read = inStream.read()) != -1) {
-							fos.write(read);
+						if (!newFile.exists()) {
+							BufferedInputStream bis = new BufferedInputStream(photoInt.getImageAsStream(p, Size.ORIGINAL));
+							FileOutputStream fos = new FileOutputStream(newFile);
+							int read;
+							byte[] buffer = new byte[100 * 1024];
+							while ((read = bis.read(buffer)) != -1) {
+								fos.write(buffer, 0, read);
+							}
+							fos.flush();
+							fos.close();
+							bis.close();
 						}
-						fos.flush();
-						fos.close();
-						inStream.close();
 					} catch (Exception e) {
 						error++;
 					}
@@ -447,7 +471,7 @@ public class GUI extends javax.swing.JFrame implements Runnable {
 				}
 				page++;
 			} while (page <= pages && isRunning);
-			statusLabel.setText(isRunning ? "Download of " + total + " images finished with " + error + " errors!" : "Aborted download!");
+			statusLabel.setText(isRunning ? "Download of " + total + " images finished with " + error + " errors!" : "Stopped downloading process. You can resume it at any time.");
 		} catch (FlickrException ex) {
 			statusLabel.setText(ex.getMessage());
 		}
