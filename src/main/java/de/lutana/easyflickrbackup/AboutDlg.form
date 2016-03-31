@@ -89,7 +89,7 @@
             <Font bold="true" component="jLabel1" property="font" relativeSize="true" size="0"/>
           </FontInfo>
         </Property>
-        <Property name="text" type="java.lang.String" value="EasyFlickrBackup 1.1.1"/>
+        <Property name="text" type="java.lang.String" value="EasyFlickrBackup 1.2"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel2">
@@ -135,7 +135,7 @@
             <Property name="editable" type="boolean" value="false"/>
             <Property name="columns" type="int" value="20"/>
             <Property name="rows" type="int" value="5"/>
-            <Property name="text" type="java.lang.String" value="Version 1.1.1&#xa;- File names comply with flickr guidelines&#xa;&#xa;Version 1.1&#xa;- Download process about 10 times faster&#xa;- Pause &amp; Resume the download process at any time&#xa;- Store files in a separate directory per user&#xa;&#xa;Version 1.0&#xa;- Initial release"/>
+            <Property name="text" type="java.lang.String" value="Version 1.2&#xa;- ...&#xa;&#xa;Version 1.1.1&#xa;- File names comply with flickr guidelines&#xa;&#xa;Version 1.1&#xa;- Download process about 10 times faster&#xa;- Pause &amp; Resume the download process at any time&#xa;- Store files in a separate directory per user&#xa;&#xa;Version 1.0&#xa;- Initial release"/>
           </Properties>
         </Component>
       </SubComponents>
