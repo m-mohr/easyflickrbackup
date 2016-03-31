@@ -23,25 +23,41 @@
  */
 package de.lutana.easyflickrbackup;
 
-import com.flickr4java.flickr.auth.Auth;
-import com.flickr4java.flickr.people.User;
+import com.flickr4java.flickr.photos.Size;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
-public class AuthContainer {
-
-	private Auth auth;
-
-	public AuthContainer(Auth auth) {
-		this.auth = auth;
+public class ImageSizes {
+	
+	private Map<Integer,String> suffix;
+	
+	public ImageSizes() {
+		suffix = new HashMap<>();
+		suffix.put(Size.SQUARE, "_s");
+		suffix.put(Size.SQUARE_LARGE, "_q");
+		suffix.put(Size.THUMB, "_t");
+		suffix.put(Size.SMALL, "_m");
+		suffix.put(Size.SMALL_320, "_n");
+		suffix.put(Size.MEDIUM, "");
+		suffix.put(Size.MEDIUM_640, "_z");
+		suffix.put(Size.MEDIUM_800, "_c");
+		suffix.put(Size.LARGE, "_b");
+		suffix.put(Size.LARGE_1600, "_h");
+		suffix.put(Size.LARGE_2048, "_k");
+		suffix.put(Size.ORIGINAL, "_o");
 	}
-
-	public Auth getAuth() {
-		return auth;
+	
+	public String getSuffix(int size) {
+		try {
+			return suffix.get(size);
+		} catch(Exception e) {
+			return null;
+		}
 	}
-
-	@Override
-	public String toString() {
-		User u = auth.getUser();
-		return u.getUsername() + " (" + u.getId() + ")";
-	}
-
+	
 }

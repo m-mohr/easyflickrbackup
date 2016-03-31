@@ -57,6 +57,7 @@ public class GUI extends javax.swing.JFrame implements Runnable {
 
 	public GUI() throws FlickrException {
 		isRunning = false;
+		sizes = new ImageSizes();
 		flickr = new Flickr(FlickrConfig.API_KEY, FlickrConfig.SECRET_KEY, new REST());
 		flickrAuth = new FileAuthStore(Settings.getAuthDirectory());
 
@@ -97,7 +98,7 @@ public class GUI extends javax.swing.JFrame implements Runnable {
 
         settingsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("1. Prepare backup"));
 
-        dirLabel.setText("Choose backup folder:");
+        dirLabel.setText("Backup folder:");
 
         dirField.setEditable(false);
 
@@ -108,7 +109,7 @@ public class GUI extends javax.swing.JFrame implements Runnable {
             }
         });
 
-        authLabel.setText("Choose user account:");
+        authLabel.setText("User account:");
 
         authBtn.setText("Authenticate another user");
         authBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -119,7 +120,7 @@ public class GUI extends javax.swing.JFrame implements Runnable {
 
         Auth[] auths = this.flickrAuth.retrieveAll();
         for (Auth auth : auths) {
-            userBox.addItem(new AuthContainer(auth));
+            userBox.addItem(new StringContainer.Auth(auth));
         }
         if (userBox.getItemCount() > 0) {
             userBox.setSelectedIndex(0);
@@ -139,17 +140,20 @@ public class GUI extends javax.swing.JFrame implements Runnable {
                 .addContainerGap()
                 .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(settingsPanelLayout.createSequentialGroup()
-                        .addComponent(dirLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(dirField)
+                        .addComponent(dirLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(dirBtn))
+                        .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(settingsPanelLayout.createSequentialGroup()
+                                .addComponent(dirField)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(dirBtn))
+                            .addGroup(settingsPanelLayout.createSequentialGroup()
+                                .addComponent(userBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(authBtn))))
                     .addGroup(settingsPanelLayout.createSequentialGroup()
-                        .addComponent(authLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(userBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(authBtn)))
+                        .addComponent(authLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 423, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         settingsPanelLayout.setVerticalGroup(
@@ -196,7 +200,7 @@ public class GUI extends javax.swing.JFrame implements Runnable {
                     .addComponent(startBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(backupSep)
                     .addGroup(backupPanelLayout.createSequentialGroup()
-                        .addComponent(statusLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 501, Short.MAX_VALUE)
+                        .addComponent(statusLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cancelBtn))
                     .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -249,7 +253,7 @@ public class GUI extends javax.swing.JFrame implements Runnable {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(openFolderBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 560, Short.MAX_VALUE)
+                    .addComponent(openFolderBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(aboutBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -284,7 +288,7 @@ public class GUI extends javax.swing.JFrame implements Runnable {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(settingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(settingsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(backupPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -305,9 +309,9 @@ public class GUI extends javax.swing.JFrame implements Runnable {
 	}
 
 	public void updateAuth() {
-		AuthContainer authContainer = (AuthContainer) userBox.getSelectedItem();
+		StringContainer.Auth authContainer = (StringContainer.Auth) userBox.getSelectedItem();
 		if (authContainer != null) {
-			this.setAuth(authContainer.getAuth());
+			this.setAuth(authContainer.get());
 		}
 	}
 
@@ -325,6 +329,32 @@ public class GUI extends javax.swing.JFrame implements Runnable {
 
 	private boolean isRunning() {
 		return isRunning;
+	}
+	
+	private String generateFilename(Photo p, int size) {
+		String suffix = sizes.getSuffix(size);
+		if (size == Size.ORIGINAL) {
+			return p.getId() + "_" + p.getOriginalSecret() + suffix + "." + p.getOriginalFormat();
+		}
+		else {
+			return p.getId() + "_" + p.getSecret() + suffix + ".jpg";
+		}
+	}
+
+	public File getBackupDirectory() {
+		User user = this.getAuth().getUser();
+		File basedir = Settings.getBackupDirectory();
+		String dir = basedir.getAbsolutePath();
+		dir += File.separator;
+		dir += user.getId();
+		File file = new File(dir);
+		if (!file.exists()) {
+			file.mkdirs();
+		}
+		if (!file.exists()) {
+			file = basedir;
+		}
+		return file;
 	}
 
     private void authBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_authBtnActionPerformed
@@ -345,7 +375,7 @@ public class GUI extends javax.swing.JFrame implements Runnable {
 		try {
 			Token requestToken = authInterface.getAccessToken(accessToken, new Verifier(tokenKey));
 			Auth auth = authInterface.checkToken(requestToken);
-			AuthContainer ac = new AuthContainer(auth);
+			StringContainer.Auth ac = new StringContainer.Auth(auth);
 			userBox.addItem(ac);
 			userBox.setSelectedItem(ac);
 			updateAuth();
@@ -401,26 +431,11 @@ public class GUI extends javax.swing.JFrame implements Runnable {
 		AboutDlg dlg = new AboutDlg(this);
 		dlg.setVisible(true);
     }//GEN-LAST:event_aboutBtnActionPerformed
-
-	public File getBackupDirectory() {
-		User user = this.getAuth().getUser();
-		File basedir = Settings.getBackupDirectory();
-		String dir = basedir.getAbsolutePath();
-		dir += File.separator;
-		dir += user.getId();
-		File file = new File(dir);
-		if (!file.exists()) {
-			file.mkdirs();
-		}
-		if (!file.exists()) {
-			file = basedir;
-		}
-		return file;
-	}
 	
 	@Override
 	public void run() {
 		this.statusLabel.setText("Initializing download process...");
+		progressBar.setValue(0);
 		File directory = this.getBackupDirectory();
 		if (!directory.mkdirs()) {
 			
@@ -432,8 +447,9 @@ public class GUI extends javax.swing.JFrame implements Runnable {
 		int total = 0;
 		int current = 0;
 		int error = 0;
-		Set<String> options = new HashSet<String>();
+		Set<String> options = new HashSet<>();
 		options.add("original_format");
+		Integer size = Size.ORIGINAL;
 		try {
 			do {
 				RequestContext.getRequestContext().setAuth(this.getAuth());
@@ -449,11 +465,11 @@ public class GUI extends javax.swing.JFrame implements Runnable {
 				while (it.hasNext() && isRunning) {
 					current++;
 					Photo p = it.next();
-					this.statusLabel.setText("Downloading image " + current + " of " + total + ".");
+					this.statusLabel.setText("Photo " + current + " of " + total + ": Downloading");
 					try {
-						File newFile = new File(directory, p.getId() + "." + p.getOriginalFormat());
+						File newFile = new File(directory, this.generateFilename(p, size));
 						if (!newFile.exists()) {
-							BufferedInputStream bis = new BufferedInputStream(photoInt.getImageAsStream(p, Size.ORIGINAL));
+							BufferedInputStream bis = new BufferedInputStream(photoInt.getImageAsStream(p, size));
 							FileOutputStream fos = new FileOutputStream(newFile);
 							int read;
 							byte[] buffer = new byte[100 * 1024];
@@ -471,7 +487,7 @@ public class GUI extends javax.swing.JFrame implements Runnable {
 				}
 				page++;
 			} while (page <= pages && isRunning);
-			statusLabel.setText(isRunning ? "Download of " + total + " images finished with " + error + " errors!" : "Stopped downloading process. You can resume it at any time.");
+			statusLabel.setText(isRunning ? "Download of " + total + " photos finished. " + (error == 0 ? "No" : error) + " errors occured!" : "Stopped downloading process. You can resume it at any time.");
 		} catch (FlickrException ex) {
 			statusLabel.setText(ex.getMessage());
 		}
@@ -508,6 +524,7 @@ public class GUI extends javax.swing.JFrame implements Runnable {
 
 		/* Create and display the form */
 		java.awt.EventQueue.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				try {
 					GUI g = new GUI();
@@ -519,9 +536,10 @@ public class GUI extends javax.swing.JFrame implements Runnable {
 		});
 	}
 
+	private final ImageSizes sizes;
 	private boolean isRunning;
-	private FileAuthStore flickrAuth;
-	private Flickr flickr;
+	private final FileAuthStore flickrAuth;
+	private final Flickr flickr;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton aboutBtn;
     private javax.swing.JButton authBtn;

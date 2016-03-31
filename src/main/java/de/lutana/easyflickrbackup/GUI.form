@@ -38,11 +38,11 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Component id="settingsPanel" max="32767" attributes="0"/>
-              <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="settingsPanel" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="backupPanel" max="32767" attributes="0"/>
-              <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
@@ -66,18 +66,24 @@
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <Component id="dirLabel" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Component id="dirField" max="32767" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="dirBtn" min="-2" max="-2" attributes="0"/>
+                          <Component id="dirLabel" min="-2" pref="114" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="dirField" max="32767" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="dirBtn" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="userBox" max="32767" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="authBtn" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
                       </Group>
                       <Group type="102" attributes="0">
-                          <Component id="authLabel" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Component id="userBox" max="32767" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="authBtn" min="-2" max="-2" attributes="0"/>
+                          <Component id="authLabel" min="-2" pref="114" max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="423" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
@@ -87,13 +93,13 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="dirLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="dirField" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="dirBtn" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="authLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="authBtn" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -107,7 +113,7 @@
       <SubComponents>
         <Component class="javax.swing.JLabel" name="dirLabel">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Choose backup folder:"/>
+            <Property name="text" type="java.lang.String" value="Backup folder:"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="dirField">
@@ -125,7 +131,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="authLabel">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Choose user account:"/>
+            <Property name="text" type="java.lang.String" value="User account:"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="authBtn">
@@ -141,7 +147,7 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="userBoxActionPerformed"/>
           </Events>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="Auth[] auths = this.flickrAuth.retrieveAll();&#xa;for (Auth auth : auths) {&#xa;&#x9;userBox.addItem(new AuthContainer(auth));&#xa;}&#xa;if (userBox.getItemCount() &gt; 0) {&#xa;&#x9;userBox.setSelectedIndex(0);&#xa;&#x9;updateAuth();&#xa;}"/>
+            <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="Auth[] auths = this.flickrAuth.retrieveAll();&#xa;for (Auth auth : auths) {&#xa;&#x9;userBox.addItem(new StringContainer.Auth(auth));&#xa;}&#xa;if (userBox.getItemCount() &gt; 0) {&#xa;&#x9;userBox.setSelectedIndex(0);&#xa;&#x9;updateAuth();&#xa;}"/>
           </AuxValues>
         </Component>
       </SubComponents>
@@ -164,7 +170,7 @@
                       <Component id="startBtn" max="32767" attributes="0"/>
                       <Component id="backupSep" max="32767" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
-                          <Component id="statusLabel" pref="501" max="32767" attributes="0"/>
+                          <Component id="statusLabel" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="cancelBtn" min="-2" max="-2" attributes="0"/>
                       </Group>
@@ -237,7 +243,7 @@
               <Group type="102" attributes="0">
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="openFolderBtn" pref="560" max="32767" attributes="0"/>
+                      <Component id="openFolderBtn" max="32767" attributes="0"/>
                       <Group type="102" attributes="0">
                           <Component id="aboutBtn" max="32767" attributes="0"/>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
