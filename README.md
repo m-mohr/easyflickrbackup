@@ -1,5 +1,5 @@
 # EasyFlickrBackup
-Easy to use application to download and backup all your photos in original size from flickr. 
+Easy to use application to download and backup all your photos in any size from flickr. 
 
 * Current version: 1.2
 * License: MIT License

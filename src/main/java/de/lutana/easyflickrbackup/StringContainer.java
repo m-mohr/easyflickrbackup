@@ -55,4 +55,17 @@ public abstract class StringContainer<T> {
 		
 	}
 
+	public static class Entry extends StringContainer<java.util.Map.Entry<Integer,String>> {
+		
+		public Entry(java.util.Map.Entry<Integer,String> obj) {
+			super(obj);
+		}
+
+		@Override
+		public String toString() {
+			return obj.getValue();
+		}
+		
+	}
+
 }

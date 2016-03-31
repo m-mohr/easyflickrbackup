@@ -35,6 +35,8 @@ import java.util.Map.Entry;
 public class ImageSizes {
 	
 	private Map<Integer,String> suffix;
+	private List<Entry<Integer,String>> names;
+	private Map<Integer,String> namesMap;
 	
 	public ImageSizes() {
 		suffix = new HashMap<>();
@@ -50,6 +52,27 @@ public class ImageSizes {
 		suffix.put(Size.LARGE_1600, "_h");
 		suffix.put(Size.LARGE_2048, "_k");
 		suffix.put(Size.ORIGINAL, "_o");
+		
+		names = new ArrayList<>();
+		names.add(new AbstractMap.SimpleEntry<>(Size.SQUARE, "Square (75px)"));
+		names.add(new AbstractMap.SimpleEntry<>(Size.SQUARE_LARGE, "Square (150px)"));
+		names.add(new AbstractMap.SimpleEntry<>(Size.THUMB, "Thumbnail (100px)"));
+		names.add(new AbstractMap.SimpleEntry<>(Size.SMALL, "Small (320px)"));
+		names.add(new AbstractMap.SimpleEntry<>(Size.SMALL_320, "Small (320px)"));
+		names.add(new AbstractMap.SimpleEntry<>(Size.MEDIUM, "Medium (500px)"));
+		names.add(new AbstractMap.SimpleEntry<>(Size.MEDIUM_640, "Medium (640px)"));
+		names.add(new AbstractMap.SimpleEntry<>(Size.MEDIUM_800, "Medium (800px)"));
+		names.add(new AbstractMap.SimpleEntry<>(Size.LARGE, "Large (1024px)"));
+		names.add(new AbstractMap.SimpleEntry<>(Size.LARGE_1600, "Large (1600px)"));
+		names.add(new AbstractMap.SimpleEntry<>(Size.LARGE_2048, "Large (2048px)"));
+		names.add(new AbstractMap.SimpleEntry<>(Size.ORIGINAL, "Original"));
+		
+		namesMap = new HashMap<>();
+		Iterator<Entry<Integer,String>> it = names.iterator();
+		while (it.hasNext()) {
+			Entry<Integer,String> entry = it.next();
+			namesMap.put(entry.getKey(), entry.getValue());
+		}
 	}
 	
 	public String getSuffix(int size) {
@@ -57,6 +80,18 @@ public class ImageSizes {
 			return suffix.get(size);
 		} catch(Exception e) {
 			return null;
+		}
+	}
+	
+	public List<Entry<Integer,String>> getAllNames() {
+		return names;
+	}
+	
+	public String getName(int size) {
+		try {
+			return namesMap.get(size);
+		} catch(Exception e) {
+			return "";
 		}
 	}
 	

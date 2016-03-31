@@ -30,6 +30,23 @@ public class Settings {
 
 	private static Preferences prefs = Preferences.userNodeForPackage(de.lutana.easyflickrbackup.Settings.class);
 
+	public static void setSelectedSizes(int[] ix) {
+		byte[] arr = new byte[ix.length];
+		for(int i = 0; i < ix.length; i++) {
+			arr[i] = (byte) ix[i];
+		}
+		prefs.putByteArray("SELECTED_SIZES", arr);
+	}
+
+	public static int[] getSelectedSizes(int defaultIndex) {
+		byte[] ix = prefs.getByteArray("SELECTED_SIZES", new byte[] {(byte) defaultIndex});
+		int[] arr = new int[ix.length];
+		for(int i = 0; i < ix.length; i++) {
+			arr[i] = (int) ix[i];
+		}
+		return arr;
+	}
+
 	public static void setBackupDirectory(File file) {
 		if (file != null) {
 			prefs.put("BACKUP_DIRECTORY", file.getAbsolutePath());

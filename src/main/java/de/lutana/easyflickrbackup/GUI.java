@@ -45,9 +45,14 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
+import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import org.scribe.model.Token;
@@ -82,6 +87,9 @@ public class GUI extends javax.swing.JFrame implements Runnable {
         authLabel = new javax.swing.JLabel();
         authBtn = new javax.swing.JButton();
         userBox = new javax.swing.JComboBox();
+        sizeLabel = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        sizeBox = new javax.swing.JList();
         backupPanel = new javax.swing.JPanel();
         startBtn = new javax.swing.JButton();
         backupSep = new javax.swing.JSeparator();
@@ -132,6 +140,22 @@ public class GUI extends javax.swing.JFrame implements Runnable {
             }
         });
 
+        sizeLabel.setText("Image Size(s):");
+
+        DefaultListModel model = new DefaultListModel();
+        Iterator<Entry<Integer, String>> it = sizes.getAllNames().iterator();
+        while (it.hasNext()) {
+            model.addElement(new StringContainer.Entry(it.next()));
+        }
+        sizeBox.setModel(model);
+        sizeBox.setSelectedIndices(Settings.getSelectedSizes(sizes.getAllNames().size()-1));
+        sizeBox.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                sizeBoxValueChanged(evt);
+            }
+        });
+        jScrollPane1.setViewportView(sizeBox);
+
         javax.swing.GroupLayout settingsPanelLayout = new javax.swing.GroupLayout(settingsPanel);
         settingsPanel.setLayout(settingsPanelLayout);
         settingsPanelLayout.setHorizontalGroup(
@@ -151,9 +175,11 @@ public class GUI extends javax.swing.JFrame implements Runnable {
                                 .addComponent(userBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(authBtn))))
+                    .addComponent(authLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(settingsPanelLayout.createSequentialGroup()
-                        .addComponent(authLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 423, Short.MAX_VALUE)))
+                        .addComponent(sizeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 419, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         settingsPanelLayout.setVerticalGroup(
@@ -169,7 +195,11 @@ public class GUI extends javax.swing.JFrame implements Runnable {
                     .addComponent(authLabel)
                     .addComponent(authBtn)
                     .addComponent(userBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(sizeLabel)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         backupPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("2. Execute backup"));
@@ -218,8 +248,8 @@ public class GUI extends javax.swing.JFrame implements Runnable {
                     .addComponent(statusLabel)
                     .addComponent(cancelBtn))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("3. Finish backup"));
@@ -288,9 +318,9 @@ public class GUI extends javax.swing.JFrame implements Runnable {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(settingsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(settingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(backupPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(backupPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -301,8 +331,9 @@ public class GUI extends javax.swing.JFrame implements Runnable {
 
 	private void updateComponents() {
 		File dir = Settings.getBackupDirectory();
+		boolean sizesSelected = (sizeBox.getSelectedIndices().length > 0);
 		dirField.setText(dir.getAbsolutePath());
-		startBtn.setEnabled(dir.exists() && this.isAuthenticated() && !this.isRunning());
+		startBtn.setEnabled(dir.exists() && this.isAuthenticated() && !this.isRunning() && sizesSelected);
 		openFolderBtn.setEnabled(dir.exists() && this.isAuthenticated());
 		cancelBtn.setEnabled(this.isRunning());
 		progressBar.setEnabled(this.isRunning());
@@ -355,6 +386,31 @@ public class GUI extends javax.swing.JFrame implements Runnable {
 			file = basedir;
 		}
 		return file;
+	}
+	
+	public Collection<Integer> getSelectedSizes() {
+		Collection<Integer> list = new ArrayList<>();
+		Iterator<StringContainer.Entry> it = sizeBox.getSelectedValuesList().iterator();
+		while (it.hasNext()) {
+			StringContainer.Entry entryContainer = it.next();
+			if (entryContainer != null) {
+				Entry<Integer,String> entry = entryContainer.get();
+				if (entry != null && entry.getKey() != null) {
+					list.add(entry.getKey());
+				}
+			}
+		}
+		return list;
+	}
+	
+	public Collection<Integer> getSizes(Collection<Size> available, Collection<Integer> selected) {
+		Collection<Integer> list = new ArrayList<>();
+        for (Size size : available) {
+            if(selected.contains(size.getLabel())) {
+                list.add(size.getLabel());
+            }
+        }
+		return list;
 	}
 
     private void authBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_authBtnActionPerformed
@@ -431,6 +487,11 @@ public class GUI extends javax.swing.JFrame implements Runnable {
 		AboutDlg dlg = new AboutDlg(this);
 		dlg.setVisible(true);
     }//GEN-LAST:event_aboutBtnActionPerformed
+
+    private void sizeBoxValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_sizeBoxValueChanged
+		Settings.setSelectedSizes(sizeBox.getSelectedIndices());
+		updateComponents();
+    }//GEN-LAST:event_sizeBoxValueChanged
 	
 	@Override
 	public void run() {
@@ -447,9 +508,9 @@ public class GUI extends javax.swing.JFrame implements Runnable {
 		int total = 0;
 		int current = 0;
 		int error = 0;
+		Collection<Integer> selectedSizes = this.getSelectedSizes();
 		Set<String> options = new HashSet<>();
 		options.add("original_format");
-		Integer size = Size.ORIGINAL;
 		try {
 			do {
 				RequestContext.getRequestContext().setAuth(this.getAuth());
@@ -465,23 +526,32 @@ public class GUI extends javax.swing.JFrame implements Runnable {
 				while (it.hasNext() && isRunning) {
 					current++;
 					Photo p = it.next();
-					this.statusLabel.setText("Photo " + current + " of " + total + ": Downloading");
-					try {
-						File newFile = new File(directory, this.generateFilename(p, size));
-						if (!newFile.exists()) {
-							BufferedInputStream bis = new BufferedInputStream(photoInt.getImageAsStream(p, size));
-							FileOutputStream fos = new FileOutputStream(newFile);
-							int read;
-							byte[] buffer = new byte[100 * 1024];
-							while ((read = bis.read(buffer)) != -1) {
-								fos.write(buffer, 0, read);
+					String status = "Photo " + current + " of " + total + ": ";
+					this.statusLabel.setText(status + "Checking for new images");
+					Collection<Integer> sizes = this.getSizes(photoInt.getSizes(p.getId(), true), selectedSizes);
+					int sizeCount = 0;
+					Iterator<Integer> itSize = sizes.iterator();
+					while (itSize.hasNext() && isRunning) {
+						Integer size = itSize.next();
+						sizeCount++;
+						this.statusLabel.setText(status + "Downloading size " + sizeCount + " of " + sizes.size());
+						try {
+							File newFile = new File(directory, this.generateFilename(p, size));
+							if (!newFile.exists()) {
+								BufferedInputStream bis = new BufferedInputStream(photoInt.getImageAsStream(p, size));
+								FileOutputStream fos = new FileOutputStream(newFile);
+								int read;
+								byte[] buffer = new byte[100 * 1024];
+								while ((read = bis.read(buffer)) != -1) {
+									fos.write(buffer, 0, read);
+								}
+								fos.flush();
+								fos.close();
+								bis.close();
 							}
-							fos.flush();
-							fos.close();
-							bis.close();
+						} catch (Exception e) {
+							error++;
 						}
-					} catch (Exception e) {
-						error++;
 					}
 					progressBar.setValue(current);
 				}
@@ -552,9 +622,12 @@ public class GUI extends javax.swing.JFrame implements Runnable {
     private javax.swing.JLabel dirLabel;
     private javax.swing.JButton jButton1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton openFolderBtn;
     private javax.swing.JProgressBar progressBar;
     private javax.swing.JPanel settingsPanel;
+    private javax.swing.JList sizeBox;
+    private javax.swing.JLabel sizeLabel;
     private javax.swing.JButton startBtn;
     private javax.swing.JLabel statusLabel;
     private javax.swing.JComboBox userBox;
