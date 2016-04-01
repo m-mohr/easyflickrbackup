@@ -4,7 +4,7 @@ Easy to use application to download and backup all your photos in original size 
 * Current version: 1.1.1
 * License: MIT License
 
-![Screenshot](https://farm2.staticflickr.com/1701/25533200184_03355b0172_o_d.png)
+![Screenshot](https://c2.staticflickr.com/2/1701/25533200184_1d88bdfa68_o.png)
 
 ## System requirements
 * Operating system: Windows, Linux, Mac OS X
