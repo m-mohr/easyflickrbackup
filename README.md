@@ -8,7 +8,7 @@ Easy to use application to download and backup all your photos in original size 
 
 ## System requirements
 * Operating system: Windows, Linux, Mac OS X
-* Software: Java Runtime Environment > 7.0 ([Download](https://www.java.com/download/))
+* Software: Java Runtime Environment >= 7.0 ([Download](https://www.java.com/download/))
 
 ## Download & Installation
 
