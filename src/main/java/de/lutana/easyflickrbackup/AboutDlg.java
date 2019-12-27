@@ -82,7 +82,8 @@ public class AboutDlg extends javax.swing.JDialog {
         jTextArea1.setEditable(false);
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
-        jTextArea1.setText("Version 1.2\n- ...\n\nVersion 1.1.1\n- File names comply with flickr guidelines\n\nVersion 1.1\n- Download process about 10 times faster\n- Pause & Resume the download process at any time\n- Store files in a separate directory per user\n\nVersion 1.0\n- Initial release");
+        jTextArea1.setText("Version 1.2\n- Support for latest Flickr API\n\nVersion 1.1.1\n- File names comply with flickr guidelines\n\nVersion 1.1\n- Download process about 10 times faster\n- Pause & Resume the download process at any time\n- Store files in a separate directory per user\n\nVersion 1.0\n- Initial release");
+        jTextArea1.setCaretPosition(0);
         jScrollPane1.setViewportView(jTextArea1);
 
         jLabel7.setText("License:");

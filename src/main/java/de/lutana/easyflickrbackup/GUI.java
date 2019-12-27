@@ -37,6 +37,8 @@ import com.flickr4java.flickr.photos.PhotoList;
 import com.flickr4java.flickr.photos.PhotosInterface;
 import com.flickr4java.flickr.photos.Size;
 import com.flickr4java.flickr.util.FileAuthStore;
+import com.github.scribejava.core.model.OAuth1RequestToken;
+import com.github.scribejava.core.model.OAuth1Token;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -50,8 +52,6 @@ import java.util.Iterator;
 import java.util.Set;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import org.scribe.model.Token;
-import org.scribe.model.Verifier;
 
 public class GUI extends javax.swing.JFrame implements Runnable {
 
@@ -359,7 +359,7 @@ public class GUI extends javax.swing.JFrame implements Runnable {
 
     private void authBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_authBtnActionPerformed
 		AuthInterface authInterface = flickr.getAuthInterface();
-		Token accessToken = authInterface.getRequestToken();
+		OAuth1RequestToken accessToken = authInterface.getRequestToken();
 
 		JOptionPane.showMessageDialog(this, "You are redirected to the Flickr authentication process now.\r\nAfterwards you need to enter the authentication token here.");
 		String urlString = authInterface.getAuthorizationUrl(accessToken, Permission.READ);
@@ -373,7 +373,7 @@ public class GUI extends javax.swing.JFrame implements Runnable {
 			return;
 		}
 		try {
-			Token requestToken = authInterface.getAccessToken(accessToken, new Verifier(tokenKey));
+			OAuth1Token requestToken = authInterface.getAccessToken(accessToken, tokenKey);
 			Auth auth = authInterface.checkToken(requestToken);
 			StringContainer.Auth ac = new StringContainer.Auth(auth);
 			userBox.addItem(ac);

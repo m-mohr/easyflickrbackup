@@ -135,7 +135,8 @@
             <Property name="editable" type="boolean" value="false"/>
             <Property name="columns" type="int" value="20"/>
             <Property name="rows" type="int" value="5"/>
-            <Property name="text" type="java.lang.String" value="Version 1.2&#xa;- ...&#xa;&#xa;Version 1.1.1&#xa;- File names comply with flickr guidelines&#xa;&#xa;Version 1.1&#xa;- Download process about 10 times faster&#xa;- Pause &amp; Resume the download process at any time&#xa;- Store files in a separate directory per user&#xa;&#xa;Version 1.0&#xa;- Initial release"/>
+            <Property name="text" type="java.lang.String" value="Version 1.2&#xa;- Support for latest Flickr API&#xa;&#xa;Version 1.1.1&#xa;- File names comply with flickr guidelines&#xa;&#xa;Version 1.1&#xa;- Download process about 10 times faster&#xa;- Pause &amp; Resume the download process at any time&#xa;- Store files in a separate directory per user&#xa;&#xa;Version 1.0&#xa;- Initial release"/>
+            <Property name="caretPosition" type="int" value="0"/>
           </Properties>
         </Component>
       </SubComponents>
