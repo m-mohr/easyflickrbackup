@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2016 Matthias Mohr.
+ * Copyright 2024 Matthias Mohr.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,36 +23,18 @@
  */
 package de.lutana.easyflickrbackup;
 
-import com.flickr4java.flickr.photos.Size;
-import java.util.HashMap;
-import java.util.Map;
+import com.flickr4java.flickr.people.User;
 
-public class ImageSizes {
-	
-	private final Map<Integer,String> suffix;
-	
-	public ImageSizes() {
-		suffix = new HashMap<>();
-		suffix.put(Size.SQUARE, "_s");
-		suffix.put(Size.SQUARE_LARGE, "_q");
-		suffix.put(Size.THUMB, "_t");
-		suffix.put(Size.SMALL, "_m");
-		suffix.put(Size.SMALL_320, "_n");
-		suffix.put(Size.MEDIUM, "");
-		suffix.put(Size.MEDIUM_640, "_z");
-		suffix.put(Size.MEDIUM_800, "_c");
-		suffix.put(Size.LARGE, "_b");
-		suffix.put(Size.LARGE_1600, "_h");
-		suffix.put(Size.LARGE_2048, "_k");
-		suffix.put(Size.ORIGINAL, "_o");
+public class StringContainerAuth extends StringContainer<com.flickr4java.flickr.auth.Auth> {
+
+	public StringContainerAuth(com.flickr4java.flickr.auth.Auth obj) {
+		super(obj);
 	}
-	
-	public String getSuffix(int size) {
-		try {
-			return suffix.get(size);
-		} catch(Exception e) {
-			return null;
-		}
+
+	@Override
+	public String toString() {
+		User u = obj.getUser();
+		return u.getUsername() + " (" + u.getId() + ")";
 	}
-	
+
 }

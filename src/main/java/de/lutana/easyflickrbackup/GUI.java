@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2016 Lutana.de
+ * Copyright 2024 Matthias Mohr
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -88,6 +88,8 @@ public class GUI extends javax.swing.JFrame implements Runnable {
         statusLabel = new javax.swing.JLabel();
         progressBar = new javax.swing.JProgressBar();
         cancelBtn = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        messageArea = new javax.swing.JTextArea();
         jPanel1 = new javax.swing.JPanel();
         openFolderBtn = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
@@ -120,7 +122,7 @@ public class GUI extends javax.swing.JFrame implements Runnable {
 
         Auth[] auths = this.flickrAuth.retrieveAll();
         for (Auth auth : auths) {
-            userBox.addItem(new StringContainer.Auth(auth));
+            userBox.addItem(new StringContainerAuth(auth));
         }
         if (userBox.getItemCount() > 0) {
             userBox.setSelectedIndex(0);
@@ -190,6 +192,10 @@ public class GUI extends javax.swing.JFrame implements Runnable {
             }
         });
 
+        messageArea.setEditable(false);
+        messageArea.setColumns(20);
+        jScrollPane1.setViewportView(messageArea);
+
         javax.swing.GroupLayout backupPanelLayout = new javax.swing.GroupLayout(backupPanel);
         backupPanel.setLayout(backupPanelLayout);
         backupPanelLayout.setHorizontalGroup(
@@ -200,10 +206,11 @@ public class GUI extends javax.swing.JFrame implements Runnable {
                     .addComponent(startBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(backupSep)
                     .addGroup(backupPanelLayout.createSequentialGroup()
-                        .addComponent(statusLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(statusLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 459, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cancelBtn))
-                    .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
         backupPanelLayout.setVerticalGroup(
@@ -218,7 +225,9 @@ public class GUI extends javax.swing.JFrame implements Runnable {
                     .addComponent(statusLabel)
                     .addComponent(cancelBtn))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -309,7 +318,7 @@ public class GUI extends javax.swing.JFrame implements Runnable {
 	}
 
 	public void updateAuth() {
-		StringContainer.Auth authContainer = (StringContainer.Auth) userBox.getSelectedItem();
+		StringContainerAuth authContainer = (StringContainerAuth) userBox.getSelectedItem();
 		if (authContainer != null) {
 			this.setAuth(authContainer.get());
 		}
@@ -375,7 +384,7 @@ public class GUI extends javax.swing.JFrame implements Runnable {
 		try {
 			OAuth1Token requestToken = authInterface.getAccessToken(accessToken, tokenKey);
 			Auth auth = authInterface.checkToken(requestToken);
-			StringContainer.Auth ac = new StringContainer.Auth(auth);
+			StringContainerAuth ac = new StringContainerAuth(auth);
 			userBox.addItem(ac);
 			userBox.setSelectedItem(ac);
 			updateAuth();
@@ -479,20 +488,43 @@ public class GUI extends javax.swing.JFrame implements Runnable {
 							fos.flush();
 							fos.close();
 							bis.close();
+							addMessage("Succeeded", current);
+						}
+						else {
+							addMessage("Exists -> Skipped", current);
 						}
 					} catch (Exception e) {
+						addMessage(e.getMessage(), current);
 						error++;
 					}
 					progressBar.setValue(current);
 				}
 				page++;
 			} while (page <= pages && isRunning);
-			statusLabel.setText(isRunning ? "Download of " + total + " photos finished. " + (error == 0 ? "No" : error) + " errors occured!" : "Stopped downloading process. You can resume it at any time.");
+			addMessage(isRunning ? "Download of " + total + " photos finished. " + (error == 0 ? "No" : error) + " errors occured!" : "Stopped downloading process. You can resume it at any time.");
 		} catch (FlickrException ex) {
-			statusLabel.setText(ex.getMessage());
+			addMessage(ex.getMessage());
 		}
 		isRunning = false;
 		updateComponents();
+	}
+	
+	public void addMessage(String message) {
+		this.addMessage(message, null);
+	}
+
+	public void addMessage(String message, Integer count) {
+		if (count == null) {
+			statusLabel.setText(message);
+		}
+		if (messageArea.getDocument().getLength() > 0) {
+			messageArea.append(System.lineSeparator());
+			messageArea.setCaretPosition(messageArea.getDocument().getLength());
+		}
+		if (count != null) {
+			messageArea.append(count + ": ");
+		}
+		messageArea.append(message);
 	}
 
 	/**
@@ -501,7 +533,7 @@ public class GUI extends javax.swing.JFrame implements Runnable {
 	public static void main(String args[]) {
 		/* Set the Nimbus look and feel */
 		//<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+		/* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
 		 * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
 		 */
 		try {
@@ -552,6 +584,8 @@ public class GUI extends javax.swing.JFrame implements Runnable {
     private javax.swing.JLabel dirLabel;
     private javax.swing.JButton jButton1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextArea messageArea;
     private javax.swing.JButton openFolderBtn;
     private javax.swing.JProgressBar progressBar;
     private javax.swing.JPanel settingsPanel;

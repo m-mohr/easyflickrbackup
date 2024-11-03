@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2016 Lutana.de
+ * Copyright 2024 Matthias Mohr
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,7 @@ import java.util.prefs.Preferences;
 
 public class Settings {
 
-	private static Preferences prefs = Preferences.userNodeForPackage(de.lutana.easyflickrbackup.Settings.class);
+	private static final Preferences prefs = Preferences.userNodeForPackage(Settings.class);
 
 	public static void setBackupDirectory(File file) {
 		if (file != null) {

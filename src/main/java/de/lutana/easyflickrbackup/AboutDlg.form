@@ -89,7 +89,7 @@
             <Font bold="true" component="jLabel1" property="font" relativeSize="true" size="0"/>
           </FontInfo>
         </Property>
-        <Property name="text" type="java.lang.String" value="EasyFlickrBackup 1.2"/>
+        <Property name="text" type="java.lang.String" value="EasyFlickrBackup 1.2.1"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel2">
@@ -112,7 +112,7 @@
         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="ff" green="33" red="0" type="rgb"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="http://www.lutana.de"/>
+        <Property name="text" type="java.lang.String" value="https://mohr.ws"/>
       </Properties>
       <Events>
         <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jLabel5MouseClicked"/>
@@ -135,8 +135,7 @@
             <Property name="editable" type="boolean" value="false"/>
             <Property name="columns" type="int" value="20"/>
             <Property name="rows" type="int" value="5"/>
-            <Property name="text" type="java.lang.String" value="Version 1.2&#xa;- Support for latest Flickr API&#xa;&#xa;Version 1.1.1&#xa;- File names comply with flickr guidelines&#xa;&#xa;Version 1.1&#xa;- Download process about 10 times faster&#xa;- Pause &amp; Resume the download process at any time&#xa;- Store files in a separate directory per user&#xa;&#xa;Version 1.0&#xa;- Initial release"/>
-            <Property name="caretPosition" type="int" value="0"/>
+            <Property name="text" type="java.lang.String" value="Version 1.2.1&#xa;- Minor textual updates&#xa;- Show error messages&#xa;&#xa;Version 1.2&#xa;- Support for latest Flickr API&#xa;&#xa;Version 1.1.1&#xa;- File names comply with flickr guidelines&#xa;&#xa;Version 1.1&#xa;- Download process about 10 times faster&#xa;- Pause &amp; Resume the download process at any time&#xa;- Store files in a separate directory per user&#xa;&#xa;Version 1.0&#xa;- Initial release"/>
           </Properties>
         </Component>
       </SubComponents>
@@ -151,8 +150,11 @@
         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="ff" green="33" red="0" type="rgb"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="https://github.com/lutana-de/easyflickrbackup"/>
+        <Property name="text" type="java.lang.String" value="https://github.com/m-mohr/easyflickrbackup"/>
       </Properties>
+      <AccessibilityProperties>
+        <Property name="AccessibleContext.accessibleDescription" type="java.lang.String" value=""/>
+      </AccessibilityProperties>
       <Events>
         <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jLabel8MouseClicked"/>
       </Events>

@@ -23,8 +23,6 @@
  */
 package de.lutana.easyflickrbackup;
 
-import com.flickr4java.flickr.people.User;
-
 public abstract class StringContainer<T> {
 
 	protected T obj;
@@ -39,20 +37,6 @@ public abstract class StringContainer<T> {
 
 	@Override
 	public abstract String toString(); {
-	}
-	
-	public static class Auth extends StringContainer<com.flickr4java.flickr.auth.Auth> {
-		
-		public Auth(com.flickr4java.flickr.auth.Auth obj) {
-			super(obj);
-		}
-
-		@Override
-		public String toString() {
-			User u = obj.getUser();
-			return u.getUsername() + " (" + u.getId() + ")";
-		}
-		
 	}
 
 }

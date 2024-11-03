@@ -61,7 +61,7 @@ public class AboutDlg extends javax.swing.JDialog {
         setResizable(false);
 
         jLabel1.setFont(jLabel1.getFont().deriveFont(jLabel1.getFont().getStyle() | java.awt.Font.BOLD));
-        jLabel1.setText("EasyFlickrBackup 1.2");
+        jLabel1.setText("EasyFlickrBackup 1.2.1");
 
         jLabel2.setText("MIT License");
 
@@ -70,7 +70,7 @@ public class AboutDlg extends javax.swing.JDialog {
         jLabel4.setText("Matthias Mohr");
 
         jLabel5.setForeground(new java.awt.Color(0, 51, 255));
-        jLabel5.setText("http://www.lutana.de");
+        jLabel5.setText("https://mohr.ws");
         jLabel5.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel5MouseClicked(evt);
@@ -82,14 +82,13 @@ public class AboutDlg extends javax.swing.JDialog {
         jTextArea1.setEditable(false);
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
-        jTextArea1.setText("Version 1.2\n- Support for latest Flickr API\n\nVersion 1.1.1\n- File names comply with flickr guidelines\n\nVersion 1.1\n- Download process about 10 times faster\n- Pause & Resume the download process at any time\n- Store files in a separate directory per user\n\nVersion 1.0\n- Initial release");
-        jTextArea1.setCaretPosition(0);
+        jTextArea1.setText("Version 1.2.1\n- Minor textual updates\n- Show error messages\n\nVersion 1.2\n- Support for latest Flickr API\n\nVersion 1.1.1\n- File names comply with flickr guidelines\n\nVersion 1.1\n- Download process about 10 times faster\n- Pause & Resume the download process at any time\n- Store files in a separate directory per user\n\nVersion 1.0\n- Initial release");
         jScrollPane1.setViewportView(jTextArea1);
 
         jLabel7.setText("License:");
 
         jLabel8.setForeground(new java.awt.Color(0, 51, 255));
-        jLabel8.setText("https://github.com/lutana-de/easyflickrbackup");
+        jLabel8.setText("https://github.com/m-mohr/easyflickrbackup");
         jLabel8.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel8MouseClicked(evt);
@@ -147,19 +146,21 @@ public class AboutDlg extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
+        jLabel8.getAccessibleContext().setAccessibleDescription("");
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
 		try {
-			Desktop.getDesktop().browse(new URI("http://www.lutana.de"));
+			Desktop.getDesktop().browse(new URI("https://mohr.ws"));
 		} catch (URISyntaxException | IOException ex) {
 		}
     }//GEN-LAST:event_jLabel5MouseClicked
 
     private void jLabel8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel8MouseClicked
 		try {
-			Desktop.getDesktop().browse(new URI("https://github.com/lutana-de/easyflickrbackup"));
+			Desktop.getDesktop().browse(new URI("https://github.com/m-mohr/easyflickrbackup"));
 		} catch (URISyntaxException | IOException ex) {
 		}
     }//GEN-LAST:event_jLabel8MouseClicked

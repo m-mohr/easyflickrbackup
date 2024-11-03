@@ -1,7 +1,7 @@
 # EasyFlickrBackup
 Easy to use application to download and backup all your photos in original size from flickr. 
 
-* Current version: 1.2
+* Current version: 1.2.1
 * License: MIT License
 
 ![Screenshot](https://c2.staticflickr.com/2/1701/25533200184_1d88bdfa68_o.png)
@@ -12,7 +12,7 @@ Easy to use application to download and backup all your photos in original size 
 
 ## Download & Installation
 
-* Download: https://github.com/lutana-de/easyflickrbackup/raw/master/EasyFlickrBackup.jar
+* Download: https://github.com/m-mohr/easyflickrbackup/raw/master/EasyFlickrBackup.jar
 
 Please make sure your computer meets the system requirements. After the download has finished, click on the EasyFlickrBackup.jar file.
 
